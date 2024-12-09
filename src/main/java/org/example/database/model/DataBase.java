@@ -68,7 +68,9 @@ public class DataBase {
     }
 
     public boolean addStudent(Student student) {
-        System.out.println("Adding student: " + student.toString());
+        if (findStudentByID(student.getId()).isPresent()) {
+            return false;
+        }
         try (FileWriter fileOutputStream = new FileWriter(dbFile)) {
             StringBuilder studentData = new StringBuilder();
             studentData.append(student.getId()).append(" ")
@@ -76,7 +78,6 @@ public class DataBase {
                     .append(student.getCourse()).append(" ")
                     .append(student.getDateOfBirth()).append(" ")
                     .append(student.getMajor()).append(" ");
-            System.out.println(studentData);
             fileOutputStream.write(studentData.toString());
         } catch (IOException e) {
             e.printStackTrace();
