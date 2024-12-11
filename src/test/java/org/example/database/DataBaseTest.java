@@ -119,4 +119,14 @@ public class DataBaseTest {
         assertEquals(Optional.empty(), dataBase.findStudentByName(vasya.getName()));
     }
 
+    @Test
+    void testUpdateStudent() throws CloneNotSupportedException {
+        Student vasya = new Student(1, "vasya", 1, LocalDate.of(2000, 5, 22), Major.ART);
+        dataBase.addStudent(vasya);
+        Student vasya1 = vasya.clone();
+        vasya1.setName("vasya1");
+        dataBase.ChangeStudent(vasya1);
+
+        assertEquals(vasya1, dataBase.findStudentByID(vasya.getId()).get());
+    }
 }

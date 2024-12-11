@@ -122,4 +122,15 @@ public class DataBase {
         ClearTable();
         students.forEach(this::addStudent);
     }
+
+    public void ChangeStudent(Student student) {
+        List<Student> students = getAllStudents();
+        if(students.removeIf(studentToChange -> studentToChange.getId() == student.getId())) {
+            students.add(student);
+            ClearTable();
+            students.forEach(this::addStudent);
+        } else {
+            throw new IllegalArgumentException("Student not found");
+        }
+    }
 }
