@@ -1,6 +1,5 @@
 package org.example.database;
 
-
 import org.example.database.model.DataBase;
 import org.example.database.model.Major;
 import org.example.database.model.Student;

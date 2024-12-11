@@ -1,6 +1,7 @@
 package org.example.database.model;
 
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 
+@Component
 @Data
 public class DataBase {
     private File dbFile;
