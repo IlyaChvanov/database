@@ -1,9 +1,10 @@
 package org.example.database.model;
 
-import ch.qos.logback.classic.pattern.LineSeparatorConverter;
 import lombok.Data;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @Data
 public class DataBase {
     private File dbFile;
+    private File backupFile;
     private static DataBase instance = null;
     private DataBase() {
         this.dbFile = Paths.get("src/main/resources", "maindb").toFile();
@@ -131,6 +133,32 @@ public class DataBase {
             students.forEach(this::addStudent);
         } else {
             throw new IllegalArgumentException("Student not found");
+        }
+    }
+
+    public void CreateBackup() {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(dbFile.getAbsolutePath()));
+             BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources", "backup"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+                writer.newLine(); // добавляем новую строку
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void RestoreBackup() {
+        try (BufferedReader reader = Files.newBufferedReader(Path.of("src/main/resources/backup"));
+             BufferedWriter writer = Files.newBufferedWriter(Path.of(dbFile.getAbsolutePath()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

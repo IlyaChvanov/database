@@ -4,12 +4,11 @@ package org.example.database;
 import org.example.database.model.DataBase;
 import org.example.database.model.Major;
 import org.example.database.model.Student;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,5 +127,40 @@ public class DataBaseTest {
         dataBase.ChangeStudent(vasya1);
 
         assertEquals(vasya1, dataBase.findStudentByID(vasya.getId()).get());
+    }
+
+    @Test
+    void testCreateBackup() throws IOException {
+        Student vasya = new Student(1, "vasya", 1, LocalDate.of(2000, 5, 22), Major.ART);
+        dataBase.addStudent(vasya);
+        
+        dataBase.CreateBackup();
+        try (FileReader reader = new FileReader(Paths.get("src", "main", "resources", "backup").toFile());
+            BufferedReader bufferedReader = new BufferedReader(reader)) {
+            String line;
+            line = bufferedReader.readLine();
+            if (line != null) {
+                System.out.println("Первая строка файла: " + line);
+            } else {
+                System.out.println("Файл пуст.");
+            }
+            assertEquals("1 vasya 1 2000-05-22 ART", line);
+            FileWriter writer = new FileWriter(Paths.get("src", "main", "resources", "backup").toFile());
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void testRestoreFromBackup() {
+        Student vasya = new Student(1, "vasya", 1, LocalDate.of(2000, 5, 22), Major.ART);
+        dataBase.addStudent(vasya);
+        dataBase.CreateBackup();
+
+        dataBase.ClearTable();
+        dataBase.RestoreBackup();
+
+        assertEquals(vasya, dataBase.findStudentByID(vasya.getId()).get());
     }
 }
