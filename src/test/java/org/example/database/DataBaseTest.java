@@ -5,6 +5,8 @@ import org.example.database.model.DataBase;
 import org.example.database.model.Major;
 import org.example.database.model.Student;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -18,29 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DataBaseTest {
     DataBase dataBase = DataBase.getInstance();
 
-    @AfterAll
-    public static void tearDown() {
+    @AfterEach
+    public void tearDown() {
         DataBase dataBase = DataBase.getInstance();
-        File dbFile = dataBase.getDbFile();
-        try {
-            List<String> lines = new ArrayList<>();
-            try (BufferedReader reader = new BufferedReader(new FileReader(dbFile))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    lines.add(line);
-                }
-            }
-
-            if (!lines.isEmpty()) {
-                lines.remove(lines.size() - 1);
-            }
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(dbFile, false))) {
-                for (String line : lines) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
-            System.out.println("Last line has been removed before the test.");
+        try (FileWriter writer = new FileWriter(dataBase.getDbFile()) ){
+            writer.write("");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,8 +34,8 @@ public class DataBaseTest {
     void testClassConnectedToFile() throws IOException {
         StringBuilder fileContent = new StringBuilder();
         FileWriter fileWriter = new FileWriter(dataBase.getDbFile());
-        fileWriter.write("Hello World");
-        fileWriter.close();
+        fileWriter.write("Hello from test of connection");
+        fileWriter.flush();
         try (BufferedReader reader = new BufferedReader(new FileReader(dataBase.getDbFile()))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -61,24 +45,29 @@ public class DataBaseTest {
             throw new RuntimeException(e);
         }
 
-        assertEquals("Hello World", fileContent.toString());
+        assertEquals("Hello from test of connection", fileContent.toString());
     }
 
     @Test
-    void testAddingStudent() {
+    void testAddStudent() {
         dataBase.addStudent(new Student(1, "vasya", 1, LocalDate.of(2000, 5, 22), Major.ART));
-
         StringBuilder fileContent = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(dataBase.getDbFile()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 fileContent.append(line);
             }
+            assertEquals("1 vasya 1 2000-05-22 ART", fileContent.toString());
+
+            dataBase.addStudent(new Student(2, "vasya2", 1, LocalDate.of(2000, 5, 22), Major.ART));
+            while ((line = reader.readLine()) != null) {
+                fileContent.append(line);
+            }
+            assertEquals("1 vasya 1 2000-05-22 ART2 vasya2 1 2000-05-22 ART", fileContent.toString());
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        assertEquals("1 vasya 1 2000-05-22 ART ", fileContent.toString());
     }
 
     @Test
@@ -95,6 +84,39 @@ public class DataBaseTest {
         dataBase.addStudent(vasya);
         assertEquals(vasya, dataBase.findStudentByName(vasya.getName()).get());
         assertEquals(Optional.empty(), dataBase.findStudentByName("UNREAL NAME"));
+    }
+
+    @Test
+    void testGetAllStudents() {
+        Student vasya = new Student(1, "vasya1", 1, LocalDate.of(2000, 5, 22), Major.ART);
+        Student vasya1 = new Student(2, "vasya2", 1, LocalDate.of(2000, 5, 22), Major.ART);
+        Student vasya2 = new Student(3, "vasya3", 1, LocalDate.of(2000, 5, 22), Major.ART);
+        dataBase.addStudent(vasya);
+        dataBase.addStudent(vasya1);
+        dataBase.addStudent(vasya2);
+
+        List<Student> requiredResponse = new ArrayList<Student>(List.of(vasya, vasya1, vasya2));
+        assertEquals(requiredResponse, dataBase.getAllStudents());
+    }
+
+    @Test
+    void testDeleteStudentById() {
+        Student vasya = new Student(1, "vasya", 1, LocalDate.of(2000, 5, 22), Major.ART);
+        dataBase.addStudent(vasya);
+        assertEquals(vasya, dataBase.findStudentByID(vasya.getId()).get());
+
+        dataBase.deleteStudentById(vasya.getId());
+        assertEquals(Optional.empty(), dataBase.findStudentByID(vasya.getId()));
+    }
+
+    @Test
+    void testDeleteStudentByName() {
+        Student vasya = new Student(1, "vasya", 1, LocalDate.of(2000, 5, 22), Major.ART);
+        dataBase.addStudent(vasya);
+        assertEquals(vasya, dataBase.findStudentByName(vasya.getName()).get());
+
+        dataBase.deleteStudentByName(vasya.getName());
+        assertEquals(Optional.empty(), dataBase.findStudentByName(vasya.getName()));
     }
 
 }

@@ -1,10 +1,13 @@
 package org.example.database.model;
 
+import ch.qos.logback.classic.pattern.LineSeparatorConverter;
 import lombok.Data;
 
 import java.io.*;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -12,10 +15,13 @@ import java.util.Optional;
 public class DataBase {
     private File dbFile;
     private static DataBase instance = null;
+    private DataBase() {
+        this.dbFile = Paths.get("src/main/resources", "maindb").toFile();
+    }
 
     private Student getStudentFromDBEntry(String line) {
         String[] parts = line.split(" ");
-        if (parts.length < 5) {
+        if (parts.length != 5) {
             throw new IllegalArgumentException("Invalid database entry: " + line);
         }
         int id = Integer.parseInt(parts[0]);
@@ -31,7 +37,7 @@ public class DataBase {
             BufferedReader br = new BufferedReader(fr);
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.contains(String.valueOf(id))) {
+                if (getStudentFromDBEntry(line).getId() == id) {
                     return Optional.of(getStudentFromDBEntry(line));
                 }
             }
@@ -56,10 +62,6 @@ public class DataBase {
         return Optional.empty();
     }
 
-    private DataBase() {
-        this.dbFile = Paths.get("src/main/resources", "maindb").toFile();
-    }
-
     static public DataBase getInstance() {
         if (instance == null) {
             instance = new DataBase();
@@ -71,18 +73,53 @@ public class DataBase {
         if (findStudentByID(student.getId()).isPresent()) {
             return false;
         }
-        try (FileWriter fileOutputStream = new FileWriter(dbFile)) {
+        try (FileWriter fileOutputStream = new FileWriter(dbFile, true)) {
             StringBuilder studentData = new StringBuilder();
             studentData.append(student.getId()).append(" ")
                     .append(student.getName()).append(" ")
                     .append(student.getCourse()).append(" ")
                     .append(student.getDateOfBirth()).append(" ")
-                    .append(student.getMajor()).append(" ");
+                    .append(student.getMajor()).append(System.lineSeparator());
             fileOutputStream.write(studentData.toString());
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
         return true;
+    }
+
+    public List<Student> getAllStudents() {
+        List<Student> students = new ArrayList<>();
+        try(FileReader fr = new FileReader(dbFile)) {
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            while ((line = br.readLine()) != null) {
+                students.add(getStudentFromDBEntry(line));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
+    public void ClearTable() {
+        try (FileWriter writer = new FileWriter(dbFile) ){
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteStudentById(int id) {
+        List<Student> students = getAllStudents();
+        students.removeIf(student -> student.getId() == id);
+        ClearTable();
+        students.forEach(this::addStudent);
+    }
+    public void deleteStudentByName(String name) {
+        List<Student> students = getAllStudents();
+        students.removeIf(student -> student.getName().equals(name));
+        ClearTable();
+        students.forEach(this::addStudent);
     }
 }
