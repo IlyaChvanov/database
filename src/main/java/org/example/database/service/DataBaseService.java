@@ -7,6 +7,7 @@ import org.example.database.model.Student;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -33,5 +34,11 @@ public class DataBaseService {
         dataBase.deleteStudentByName(name);
     }
 
+    public Student searchStudentById(int id) {
+        return dataBase.findStudentByID(id).orElse(null);
+    }
+    public List<Student> searchStudentByName(String name) {
+        return dataBase.findStudentByName(name);
+    }
 }
 

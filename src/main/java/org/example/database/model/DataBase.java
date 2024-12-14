@@ -51,19 +51,20 @@ public class DataBase {
         return Optional.empty();
     }
 
-    public Optional<Student> findStudentByName(String name) {
+    public List<Student> findStudentByName(String name) {
+        List<Student> students = new ArrayList<>();
         try (FileReader fr = new FileReader(dbFile)) {
             BufferedReader br = new BufferedReader(fr);
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.contains(String.valueOf(name))) {
-                    return Optional.of(getStudentFromDBEntry(line));
+                    students.add(getStudentFromDBEntry(line));
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Optional.empty();
+        return students;
     }
 
     static public DataBase getInstance() {

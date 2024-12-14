@@ -1,10 +1,15 @@
 package org.example.database.controller;
 
 import lombok.AllArgsConstructor;
+import org.example.database.model.Student;
 import org.example.database.service.DataBaseService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -39,5 +44,17 @@ public class DatabaseController {
     public String deleteStudentByName(@RequestParam("name") String name) {
         dataBaseService.deleteStudentByName(name);
         return "Student is deleted with name: " + name;
+    }
+
+    @GetMapping("/searchStudentByName")
+    public List<Student> searchStudentByName(@RequestParam("name") String name) {
+        return dataBaseService.searchStudentByName(name);
+    }
+    @GetMapping("/searchStudentById")
+    public Student searchStudentById(@RequestParam("id") int id) {
+        Student student = dataBaseService.searchStudentById(id);
+        if (student != null) {
+            return dataBaseService.searchStudentById(id);
+        } else throw new RuntimeException("Student with id " + id + " not found");
     }
 }

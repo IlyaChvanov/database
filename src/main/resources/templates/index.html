@@ -55,11 +55,14 @@
 <form th:action="@{/deleteStudentByNamePage.html}" method="get">
     <button type="submit">Delete Student by name</button>
 </form>
-<!-- Форма для поиска студента -->
-<form th:action="@{/searchStudent}" method="get">
-    <button type="submit">Search Student</button>
+
+<form th:action="@{/searchStudentById.html}" method="get">
+    <button type="submit">Search Student By Id</button>
 </form>
 
+<form th:action="@{/searchStudentByName.html}" method="get">
+    <button type="submit">Search Student By Name</button>
+</form>
 <!-- Форма для редактирования студента -->
 <form th:action="@{/editStudent}" method="get">
     <button type="submit">Edit Student</button>

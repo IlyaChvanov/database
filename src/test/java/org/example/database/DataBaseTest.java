@@ -1,5 +1,6 @@
 package org.example.database;
 
+import org.assertj.core.util.Lists;
 import org.example.database.model.DataBase;
 import org.example.database.model.Major;
 import org.example.database.model.Student;
@@ -10,6 +11,7 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,9 +81,11 @@ public class DataBaseTest {
     @Test
     void testFindStudentByName() {
         Student vasya = new Student(1, "vasya", 1, LocalDate.of(2000, 5, 22), Major.ART);
+        Student vasya1 = new Student(2, "vasya", 1, LocalDate.of(2001, 5, 22), Major.ART);
         dataBase.addStudent(vasya);
-        assertEquals(vasya, dataBase.findStudentByName(vasya.getName()).get());
-        assertEquals(Optional.empty(), dataBase.findStudentByName("UNREAL NAME"));
+        dataBase.addStudent(vasya1);
+        assertEquals(List.of(vasya, vasya1), dataBase.findStudentByName(vasya.getName()));
+        assertEquals(Collections.emptyList(), dataBase.findStudentByName("UNREAL NAME"));
     }
 
     @Test
@@ -111,7 +115,7 @@ public class DataBaseTest {
     void testDeleteStudentByName() {
         Student vasya = new Student(1, "vasya", 1, LocalDate.of(2000, 5, 22), Major.ART);
         dataBase.addStudent(vasya);
-        assertEquals(vasya, dataBase.findStudentByName(vasya.getName()).get());
+        assertEquals(vasya, dataBase.findStudentByName(vasya.getName()));
 
         dataBase.deleteStudentByName(vasya.getName());
         assertEquals(Optional.empty(), dataBase.findStudentByName(vasya.getName()));
