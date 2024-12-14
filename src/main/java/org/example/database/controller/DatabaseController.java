@@ -74,7 +74,7 @@ public class DatabaseController {
     }
     @PostMapping("/restoreBackup")
     public String restoreBackup() {
-        dataBaseService.createBackup();
+        dataBaseService.restoreFromBackup();
         return "Backup has been restored";
     }
     @GetMapping("/showAll")
