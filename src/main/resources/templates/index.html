@@ -68,17 +68,14 @@
     <button type="submit">Edit Student</button>
 </form>
 
-<!-- Форма для создания резервной копии -->
 <form th:action="@{/createBackup}" method="post">
     <button type="submit">Create Backup</button>
 </form>
 
-<!-- Форма для восстановления из резервной копии -->
 <form th:action="@{/restoreBackup}" method="post">
     <button type="submit">Restore from Backup</button>
 </form>
 
-<!-- Форма для просмотра всех студентов -->
 <form th:action="@{/showAll}" method="get">
     <button type="submit">Get All Students</button>
 </form>
