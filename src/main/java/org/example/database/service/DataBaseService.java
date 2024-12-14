@@ -21,5 +21,17 @@ public class DataBaseService {
             throw new RuntimeException("Couldn't add student");
         }
     }
+
+    public void clearDatabase() {
+        dataBase.ClearTable();
+    }
+
+    public void deleteStudentById(int id) {
+        dataBase.deleteStudentById(id);
+    }
+    public void deleteStudentByName(String name) {
+        dataBase.deleteStudentByName(name);
+    }
+
 }
 

@@ -19,17 +19,20 @@
             color: #333;
             margin-bottom: 20px;
         }
-        a {
+        form {
             display: inline-block;
+            margin: 5px;
+        }
+        button {
             padding: 10px 20px;
             font-size: 16px;
             color: #fff;
             background-color: #007bff;
-            text-decoration: none;
+            border: none;
             border-radius: 5px;
-            margin: 5px;
+            cursor: pointer;
         }
-        a:hover {
+        button:hover {
             background-color: #0056b3;
         }
     </style>
@@ -37,15 +40,45 @@
 <body>
 <h1>Main page</h1>
 
-<!-- Ссылки для перехода на другие страницы -->
-<a href="/addStudentPage.html">Add New Student</a>
-<a th:href="@{/clearDatabase}">Clear Database</a>
-<a th:href="@{/deleteStudent}">Delete Student</a>
-<a th:href="@{/searchStudent}">Search Student</a>
-<a th:href="@{/editStudent}">Edit Student</a>
-<a th:href="@{/createBackup}">Create Backup</a>
-<a th:href="@{/restoreBackup}">Restore from Backup</a>
-<a th:href="@{/showAll}">Get all students</a>
+<form th:action="@{/addStudentPage.html}" method="get">
+    <button type="submit">Add New Student</button>
+</form>
+
+<form th:action="@{/clearDatabase}" method="post">
+    <button type="submit">Clear Database</button>
+</form>
+
+<form th:action="@{/deleteStudentByIdPage.html}" method="get">
+    <button type="submit">Delete Student by id</button>
+</form>
+
+<form th:action="@{/deleteStudentByNamePage.html}" method="get">
+    <button type="submit">Delete Student by name</button>
+</form>
+<!-- Форма для поиска студента -->
+<form th:action="@{/searchStudent}" method="get">
+    <button type="submit">Search Student</button>
+</form>
+
+<!-- Форма для редактирования студента -->
+<form th:action="@{/editStudent}" method="get">
+    <button type="submit">Edit Student</button>
+</form>
+
+<!-- Форма для создания резервной копии -->
+<form th:action="@{/createBackup}" method="post">
+    <button type="submit">Create Backup</button>
+</form>
+
+<!-- Форма для восстановления из резервной копии -->
+<form th:action="@{/restoreBackup}" method="post">
+    <button type="submit">Restore from Backup</button>
+</form>
+
+<!-- Форма для просмотра всех студентов -->
+<form th:action="@{/showAll}" method="get">
+    <button type="submit">Get All Students</button>
+</form>
 
 </body>
 </html>

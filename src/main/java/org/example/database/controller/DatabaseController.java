@@ -18,9 +18,26 @@ public class DatabaseController {
                              @RequestParam("dateOfBirth") String dateOfBirth,
                              @RequestParam("major") String major) {
         try {
-            return (dataBaseService.AddStudent(id, name, course, dateOfBirth, major).toString()) + "Added";
+            return (dataBaseService.AddStudent(id, name, course, dateOfBirth, major).toString()) + " Added";
         } catch (RuntimeException e) {
             return e.getMessage();
         }
+    }
+    @PostMapping("/clearDatabase")
+    public String clearDatabase() {
+        dataBaseService.clearDatabase();
+        return "Database has been cleared";
+    }
+
+    @PostMapping("/deleteStudentById")
+    public String deleteStudentById(@RequestParam("id") int id) {
+        dataBaseService.deleteStudentById(id);
+        return "Student is deleted with id: " + id;
+    }
+
+    @PostMapping("/deleteStudentByName")
+    public String deleteStudentByName(@RequestParam("name") String name) {
+        dataBaseService.deleteStudentByName(name);
+        return "Student is deleted with name: " + name;
     }
 }
