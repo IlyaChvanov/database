@@ -45,5 +45,16 @@ public class DataBaseService {
         Student student = new Student(id, name, course, LocalDate.parse(dateOfBirth), Major.valueOf(major));
         dataBase.editStudent(student);
     }
+
+    public void createBackup() {
+        dataBase.createBackup();
+    }
+    public void restoreFromBackup() {
+        dataBase.restoreBackup();
+    }
+
+    public List<Student> showAllStudents() {
+        return dataBase.getAllStudents();
+    }
 }
 

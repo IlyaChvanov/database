@@ -67,4 +67,18 @@ public class DatabaseController {
         dataBaseService.editStudent(id, name, course, dateOfBirth, major);
         return "Student has been updated";
     }
+    @PostMapping("/createBackup")
+    public String createBackup() {
+        dataBaseService.createBackup();
+        return "Backup has been created";
+    }
+    @PostMapping("/restoreBackup")
+    public String restoreBackup() {
+        dataBaseService.createBackup();
+        return "Backup has been restored";
+    }
+    @GetMapping("/showAll")
+    public List<Student> showAll() {
+        return dataBaseService.showAllStudents();
+    }
 }
