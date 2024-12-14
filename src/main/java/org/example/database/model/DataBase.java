@@ -107,7 +107,7 @@ public class DataBase {
         return students;
     }
 
-    public void ClearTable() {
+    public void clearTable() {
         try (FileWriter writer = new FileWriter(dbFile) ){
             writer.write("");
         } catch (IOException e) {
@@ -118,28 +118,28 @@ public class DataBase {
     public void deleteStudentById(int id) {
         List<Student> students = getAllStudents();
         students.removeIf(student -> student.getId() == id);
-        ClearTable();
+        clearTable();
         students.forEach(this::addStudent);
     }
     public void deleteStudentByName(String name) {
         List<Student> students = getAllStudents();
         students.removeIf(student -> student.getName().equals(name));
-        ClearTable();
+        clearTable();
         students.forEach(this::addStudent);
     }
 
-    public void ChangeStudent(Student student) {
+    public void editStudent(Student student) {
         List<Student> students = getAllStudents();
         if(students.removeIf(studentToChange -> studentToChange.getId() == student.getId())) {
             students.add(student);
-            ClearTable();
+            clearTable();
             students.forEach(this::addStudent);
         } else {
             throw new IllegalArgumentException("Student not found");
         }
     }
 
-    public void CreateBackup() {
+    public void createBackup() {
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(dbFile.getAbsolutePath()));
              BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources", "backup"))) {
             String line;
@@ -152,7 +152,7 @@ public class DataBase {
         }
     }
 
-    public void RestoreBackup() {
+    public void restoreBackup() {
         try (BufferedReader reader = Files.newBufferedReader(Path.of("src/main/resources/backup"));
              BufferedWriter writer = Files.newBufferedWriter(Path.of(dbFile.getAbsolutePath()))) {
             String line;

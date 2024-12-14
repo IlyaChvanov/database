@@ -1,6 +1,5 @@
 package org.example.database;
 
-import org.assertj.core.util.Lists;
 import org.example.database.model.DataBase;
 import org.example.database.model.Major;
 import org.example.database.model.Student;
@@ -127,7 +126,7 @@ public class DataBaseTest {
         dataBase.addStudent(vasya);
         Student vasya1 = vasya.clone();
         vasya1.setName("vasya1");
-        dataBase.ChangeStudent(vasya1);
+        dataBase.editStudent(vasya1);
 
         assertEquals(vasya1, dataBase.findStudentByID(vasya.getId()).get());
     }
@@ -137,7 +136,7 @@ public class DataBaseTest {
         Student vasya = new Student(1, "vasya", 1, LocalDate.of(2000, 5, 22), Major.ART);
         dataBase.addStudent(vasya);
         
-        dataBase.CreateBackup();
+        dataBase.createBackup();
         try (FileReader reader = new FileReader(Paths.get("src", "main", "resources", "backup").toFile());
             BufferedReader bufferedReader = new BufferedReader(reader)) {
             String line;
@@ -159,10 +158,10 @@ public class DataBaseTest {
     void testRestoreFromBackup() {
         Student vasya = new Student(1, "vasya", 1, LocalDate.of(2000, 5, 22), Major.ART);
         dataBase.addStudent(vasya);
-        dataBase.CreateBackup();
+        dataBase.createBackup();
 
-        dataBase.ClearTable();
-        dataBase.RestoreBackup();
+        dataBase.clearTable();
+        dataBase.restoreBackup();
 
         assertEquals(vasya, dataBase.findStudentByID(vasya.getId()).get());
     }

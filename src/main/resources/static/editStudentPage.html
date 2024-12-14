@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Form</title>
+</head>
+<body>
+<h1>Student Addition Form</h1>
+<form action="/editStudent" method="post">
+    <div>
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required>
+    </div>
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+        <label for="course">Course:</label>
+        <input type="number" id="course" name="course" min="1" required>
+    </div>
+    <div>
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dateOfBirth" required>
+    </div>
+    <div>
+        <label for="major">Major:</label>
+        <select id="major" name="major" required>
+            <option value="">Select Major</option>
+            <option value="CST">CST</option>
+            <option value="MATH">MATH</option>
+            <option value="ART">ART</option>
+        </select>
+    </div>
+    <div>
+        <button type="submit">Edit student</button>
+    </div>
+</form>
+</body>
+</html>

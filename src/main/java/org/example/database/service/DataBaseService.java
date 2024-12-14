@@ -24,7 +24,7 @@ public class DataBaseService {
     }
 
     public void clearDatabase() {
-        dataBase.ClearTable();
+        dataBase.clearTable();
     }
 
     public void deleteStudentById(int id) {
@@ -39,6 +39,11 @@ public class DataBaseService {
     }
     public List<Student> searchStudentByName(String name) {
         return dataBase.findStudentByName(name);
+    }
+
+    public void editStudent(int id, String name, int course, String dateOfBirth, String major) {
+        Student student = new Student(id, name, course, LocalDate.parse(dateOfBirth), Major.valueOf(major));
+        dataBase.editStudent(student);
     }
 }
 

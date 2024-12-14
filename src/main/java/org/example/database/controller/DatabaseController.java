@@ -57,4 +57,14 @@ public class DatabaseController {
             return dataBaseService.searchStudentById(id);
         } else throw new RuntimeException("Student with id " + id + " not found");
     }
+
+    @PostMapping("/editStudent")
+    public String editStudent(@RequestParam("id") int id,
+                            @RequestParam("name") String name,
+                            @RequestParam("course") int course,
+                            @RequestParam("dateOfBirth") String dateOfBirth,
+                            @RequestParam("major") String major) {
+        dataBaseService.editStudent(id, name, course, dateOfBirth, major);
+        return "Student has been updated";
+    }
 }
