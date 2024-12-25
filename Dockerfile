@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-slim
+FROM openjdk:23-jdk
 WORKDIR /app
 COPY build/libs/database-0.0.1-SNAPSHOT.jar /app/myapp.jar
 
